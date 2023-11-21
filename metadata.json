@@ -1,0 +1,8 @@
+{
+	"name": "Auto Assign Label",
+	"author": "Sander Van Damme",
+	"description": "Automatically assign label to articles.",
+	"version": 1.0,
+	"entrypoint": "AutoAssignLabel",
+	"type": "user"
+}

@@ -1,0 +1,32 @@
+<form action="<?php echo _url('extension', 'configure', 'e', urlencode($this->getName())); ?>" method="post">
+
+	<input type="hidden" name="_csrf" value="<?php echo FreshRSS_Auth::csrfToken(); ?>" />
+
+	<div class="form-group">
+		<label class="group-name" for="auto_assign_label_api_url">
+			Auto Assign Label API URL
+		</label>
+		<div class="group-controls">
+			<input type="text" name="auto_assign_label_api_url" id="auto_assign_label_api_url" value="<?php echo FreshRSS_Context::$user_conf->auto_assign_label_api_url; ?>">
+		</div>
+
+		<label class="group-name" for="auto_assign_label_api_key">
+			Auto Assign Label API key
+		</label>
+		<div class="group-controls">
+			<input type="text" name="auto_assign_label_api_key" id="auto_assign_label_api_key" value="<?php echo FreshRSS_Context::$user_conf->auto_assign_label_api_key; ?>">
+		</div>
+	</div>
+
+	<div class="form-group form-actions">
+		<div class="group-controls">
+			<button type="submit" class="btn btn-important">
+				<?php echo _t('gen.action.submit'); ?>
+			</button>
+			<button type="reset" class="btn">
+				<?php echo _t('gen.action.cancel'); ?>
+			</button>
+		</div>
+	</div>
+
+</form>
