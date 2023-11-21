@@ -21,15 +21,18 @@ class AutoAssignLabelExtension extends Minz_Extension
 		$tagDao = FreshRSS_Factory::createTagDao();
 
 		# Get all unread entries.
-		$entries = array_filter($entryDao->selectAll(), function ($entry) {
-			return $entry["is_read"] == false;
+		$unreadEntries = array_filter($entryDao->selectAll(), function ($entry) {
+			if (isset($entry['is_read'])){
+				return $entry['is_read'] === false;
+			}
+			return true;
 		});
 
-		# Add labels to entries.
-		$entriesWithLabels = $this->getEntriesWithLabels($entries);
-		foreach ($entriesWithLabels as $entry) {
+		# Add labels to unread entries.
+		$unreadEntriesWithLabels = $this->getEntriesWithLabels($unreadEntries);
+		foreach ($unreadEntriesWithLabels as $entry) {
 			$entryId = $entry["id"];
-			$this->deleteEntryTags($entryId);
+			$this->unassignEntryTags($entryId);
 			$tagId = $this->getTagId($entry["label"]);
 			$tagDao->tagEntry($tagId, $entryId, true);
 		}
@@ -51,7 +54,7 @@ class AutoAssignLabelExtension extends Minz_Extension
 		return $tagId;
 	}
 
-	private function deleteEntryTags($entryId)
+	private function unassignEntryTags($entryId)
 	{
 		$tagDao = FreshRSS_Factory::createTagDao();
 		$tags = $tagDao->getTagsForEntry($entryId);
@@ -63,42 +66,45 @@ class AutoAssignLabelExtension extends Minz_Extension
 
 	private function getEntriesWithLabels($entries)
 	{
-		try {
-			// Define external API.
-			$apiUrl = FreshRSS_Context::$user_conf->auto_assign_label_api_url;
-			$apiKey = FreshRSS_Context::$user_conf->auto_assign_label_api_key;
+		// Define external API.
+		$apiUrl = FreshRSS_Context::$user_conf->auto_assign_label_api_url;
+		$apiKey = FreshRSS_Context::$user_conf->auto_assign_label_api_key;
 
-			// Create request.
-			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_FAILONERROR, true);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($curl, CURLOPT_TIMEOUT, 300);
+		// Create request.
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_FAILONERROR, true);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_TIMEOUT, 300);
 
-			// Set request URL.
-			curl_setopt($curl, CURLOPT_URL, $apiUrl);
+		// Set request URL.
+		curl_setopt($curl, CURLOPT_URL, $apiUrl);
 
-			// Set request method.
-			curl_setopt($curl, CURLOPT_POST, true);
+		// Set request method.
+		curl_setopt($curl, CURLOPT_POST, true);
 
-			// Set request headers.
-			$requestHeaders = array(
-				"Accept: application/json",
-				"Content-Type: application/json",
-				"X-Open-Ai-Api-Key: {$apiKey}"
-			);
-			curl_setopt($curl, CURLOPT_HTTPHEADER, $requestHeaders);
+		// Set request headers.
+		$requestHeaders = array(
+			"Accept: application/json",
+			"Content-Type: application/json",
+			"X-Open-Ai-Api-Key: {$apiKey}"
+		);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, $requestHeaders);
 
-			// Set request body.
-			$requestBodyJson = json_encode($entries);
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $requestBodyJson);
+		// Set request body.
+		$requestBody = array_map(function ($entry) {
+			return [
+				'id' => $entry['id'],
+				'title' => $entry['title'],
+				'content' => $entry['content'],
+			];
+		}, $entries);
+		$requestBodyJson = json_encode($requestBody);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $requestBodyJson);
 
-			// Get response.
-			$response = json_decode(curl_exec($curl));
-			return $response;
-		} catch (Exception $e) {
-			return 'unknown';
-		} finally {
-			curl_close($curl);
-		}
+		// Get response.
+		$response = json_decode(curl_exec($curl));
+		curl_close($curl);
+
+		return $response;
 	}
 }
