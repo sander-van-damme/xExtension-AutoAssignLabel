@@ -21,7 +21,7 @@ class AutoAssignLabelExtension extends Minz_Extension
 		$tagDao = FreshRSS_Factory::createTagDao();
 
 		# Get all unread entries.
-		$entries = $entryDao->selectAll();
+		$entries = iterator_to_array($entryDao->selectAll());
 		$unreadEntries = array_filter($entries, function ($entry) {
 			if (isset($entry['is_read']) && $entry['is_read'] === true) {
 				return false;
