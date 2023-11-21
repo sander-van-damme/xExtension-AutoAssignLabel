@@ -22,8 +22,8 @@ class AutoAssignLabelExtension extends Minz_Extension
 
 		# Get all unread entries.
 		$unreadEntries = array_filter($entryDao->selectAll(), function ($entry) {
-			if (isset($entry['is_read'])){
-				return $entry['is_read'] === false;
+			if (isset($entry['is_read']) && $entry['is_read'] === true) {
+				return false;
 			}
 			return true;
 		});
