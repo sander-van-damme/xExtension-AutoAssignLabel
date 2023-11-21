@@ -95,8 +95,8 @@ class AutoAssignLabelExtension extends Minz_Extension
 		$requestBody = array_map(function ($entry) {
 			return [
 				'id' => $entry['id'],
-				'title' => $entry['title'],
-				'content' => $entry['content'],
+				'title' => substr($entry['title'], 0, 1000),
+				'content' => substr($entry['content'], 0, 2000),
 			];
 		}, $entries);
 		$requestBodyJson = json_encode($requestBody);
