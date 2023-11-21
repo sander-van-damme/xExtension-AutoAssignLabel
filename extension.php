@@ -103,7 +103,8 @@ class AutoAssignLabelExtension extends Minz_Extension
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $requestBodyJson);
 
 		// Get response.
-		$response = json_decode(curl_exec($curl));
+		$curl_response = curl_exec($curl);
+		$response = json_decode($curl_response);
 		curl_close($curl);
 
 		return $response;
