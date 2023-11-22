@@ -24,6 +24,7 @@ class AutoAssignLabelExtension extends Minz_Extension
 		$entries = iterator_to_array($entryDao->selectAll());
 		if (!$entries) {
 			Minz_Log::warning("Auto Assign Label Extension: No entries found.");
+			return;
 		}
 
 		// Get all unread entries.
@@ -35,12 +36,14 @@ class AutoAssignLabelExtension extends Minz_Extension
 		});
 		if (!$unreadEntries) {
 			Minz_Log::warning("Auto Assign Label Extension: No unread entries found.");
+			return;
 		}
 
 		// Get labels for unread entries.
 		$unreadEntriesWithLabels = $this->getEntriesWithLabels($unreadEntries);
-		if ($unreadEntriesWithLabels) {
+		if (!$unreadEntriesWithLabels) {
 			Minz_Log::warning("Auto Assign Label Extension: No labels created.");
+			return;
 		}
 
 		// Assign labels to unread entries.
