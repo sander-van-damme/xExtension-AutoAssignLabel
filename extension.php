@@ -42,7 +42,7 @@ class AutoAssignLabelExtension extends Minz_Extension
 		// Get labels for unread entries.
 		$unreadEntriesWithLabels = $this->getEntriesWithLabels($unreadEntries);
 		if (!$unreadEntriesWithLabels) {
-			Minz_Log::warning("Auto Assign Label Extension: No labels created.");
+			Minz_Log::warning("Auto Assign Label Extension: No labels found.");
 			return;
 		}
 
