@@ -21,7 +21,7 @@ class AutoAssignLabelExtension extends Minz_Extension
 		$tagDao = FreshRSS_Factory::createTagDao();
 
 		// Get all entries.
-		$entries = iterator_to_array($entryDao->selectAll());
+		$entries = array_values(iterator_to_array($entryDao->selectAll()));
 		if (empty($entries)) {
 			Minz_Log::warning("Auto Assign Label Extension: No entries found.");
 			return;
