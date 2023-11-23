@@ -29,7 +29,7 @@ class AutoAssignLabelExtension extends Minz_Extension
 
 		// Get all unread entries.
 		$unreadEntries = array_filter($entries, function ($entry) {
-			if (isset($entry['is_read']) && $entry['is_read'] === true) {
+			if (isset($entry['is_read']) && $entry['is_read']) {
 				return false;
 			}
 			return true;
