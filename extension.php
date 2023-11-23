@@ -22,7 +22,7 @@ class AutoAssignLabelExtension extends Minz_Extension
 
 		// Get all entries.
 		$entries = iterator_to_array($entryDao->selectAll());
-		if (!$entries) {
+		if (empty($entries)) {
 			Minz_Log::warning("Auto Assign Label Extension: No entries found.");
 			return;
 		}
@@ -34,14 +34,14 @@ class AutoAssignLabelExtension extends Minz_Extension
 			}
 			return true;
 		}));
-		if (!$unreadEntries) {
+		if (empty($unreadEntries)) {
 			Minz_Log::warning("Auto Assign Label Extension: No unread entries found.");
 			return;
 		}
 
 		// Get labels for unread entries.
 		$unreadEntriesWithLabels = $this->getEntriesWithLabels($unreadEntries);
-		if (!$unreadEntriesWithLabels) {
+		if (empty($unreadEntriesWithLabels)) {
 			Minz_Log::warning("Auto Assign Label Extension: No labels found.");
 			return;
 		}
@@ -72,7 +72,7 @@ class AutoAssignLabelExtension extends Minz_Extension
 	{
 		$tagDao = FreshRSS_Factory::createTagDao();
 		$tags = $tagDao->getTagsForEntry($entryId);
-		if ($tags) {
+		if (!empty($tags)) {
 			foreach ($tags as $tag) {
 				$tagDao->tagEntry($tag["id"], $entryId, false);
 			}
@@ -83,7 +83,7 @@ class AutoAssignLabelExtension extends Minz_Extension
 	{
 		try {
 			// Assert that entries is not null.
-			if (is_null($entries)) {
+			if (empty($entries)) {
 				throw new Exception("Entries must not be null.");
 			}
 
