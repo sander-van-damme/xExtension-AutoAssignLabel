@@ -134,7 +134,7 @@ class AutoAssignLabelExtension extends Minz_Extension
 			}
 
 			// Decode response.
-			$response = json_decode($curl_response);
+			$response = json_decode($curl_response, true);
 
 			// Assert that decoded response is not null.
 			if (is_null($response)) {
