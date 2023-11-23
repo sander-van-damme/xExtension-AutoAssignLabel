@@ -28,12 +28,12 @@ class AutoAssignLabelExtension extends Minz_Extension
 		}
 
 		// Get all unread entries.
-		$unreadEntries = array_filter($entries, function ($entry) {
+		$unreadEntries = array_values(array_filter($entries, function ($entry) {
 			if (isset($entry['is_read']) && $entry['is_read']) {
 				return false;
 			}
 			return true;
-		});
+		}));
 		if (!$unreadEntries) {
 			Minz_Log::warning("Auto Assign Label Extension: No unread entries found.");
 			return;
@@ -112,13 +112,13 @@ class AutoAssignLabelExtension extends Minz_Extension
 			curl_setopt($curl, CURLOPT_HTTPHEADER, $requestHeaders);
 
 			// Set request body.
-			$requestBody = array_map(function ($entry) {
+			$requestBody = array_values(array_map(function ($entry) {
 				return [
 					'id' => $entry['id'],
 					'title' => substr($entry['title'], 0, 1000),
 					'content' => substr($entry['content'], 0, 2000),
 				];
-			}, $entries);
+			}, $entries));
 			$requestBodyJson = json_encode($requestBody);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $requestBodyJson);
 
