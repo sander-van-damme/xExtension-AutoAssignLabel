@@ -51,7 +51,7 @@ class AutoAssignLabelExtension extends Minz_Extension
 			if (isset($entry["label"])) {
 				$entryId = $entry["id"];
 				// Limit label length to 190 characters, due to database constraint.
-				$label = substr($entry['label'], 0, 190);
+				$label = substr($entry['label'], 0, 189);
 				$this->unassignEntryTags($entryId);
 				$tagId = $this->getTagId($label);
 				$tagDao->tagEntry($tagId, $entryId, true);
