@@ -48,10 +48,12 @@ class AutoAssignLabelExtension extends Minz_Extension
 
 		// Assign labels to unread entries.
 		foreach ($unreadEntriesWithLabels as $entry) {
-			$entryId = $entry["id"];
-			$this->unassignEntryTags($entryId);
-			$tagId = $this->getTagId($entry["label"]);
-			$tagDao->tagEntry($tagId, $entryId, true);
+			if (isset($entry["label"])) {
+				$entryId = $entry["id"];
+				$this->unassignEntryTags($entryId);
+				$tagId = $this->getTagId($entry["label"]);
+				$tagDao->tagEntry($tagId, $entryId, true);
+			}
 		}
 	}
 
