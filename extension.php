@@ -50,10 +50,8 @@ class AutoAssignLabelExtension extends Minz_Extension
 		foreach ($unreadEntriesWithLabels as $entry) {
 			if (isset($entry["label"])) {
 				$entryId = $entry["id"];
-				// Limit label length to 40 characters, due to database limit.
-				$label = mb_substr($entry["label"], 0, 40);
 				$this->unassignEntryTags($entryId);
-				$tagId = $this->getTagId($label);
+				$tagId = $this->getTagId($entry["label"]);
 				$tagDao->tagEntry($tagId, $entryId, true);
 			}
 		}
@@ -62,6 +60,8 @@ class AutoAssignLabelExtension extends Minz_Extension
 	private function getTagId($tagName)
 	{
 		$tagDao = FreshRSS_Factory::createTagDao();
+		// Limit tag name length, due to database constraints.
+		$tagName = mb_strcut($tagName, 0, FreshRSS_DatabaseDAO::LENGTH_INDEX_UNICODE, 'UTF-8');
 		// If tag exists.
 		if ($tag = $tagDao->searchByName($tagName)) {
 			return $tag->id();
