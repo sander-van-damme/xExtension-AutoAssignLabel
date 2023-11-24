@@ -66,7 +66,6 @@ class AutoAssignLabelExtension extends Minz_Extension
 		$tagName = mb_strcut($tagName, 0, FreshRSS_DatabaseDAO::LENGTH_INDEX_UNICODE, 'UTF-8');
 		$tagName = mb_strcut($tagName, 0, 191, 'UTF-8');
 		Minz_Log::warning($tagName);
-		Minz_Log::warning($tagNameCut);
 		// If tag exists.
 		if ($tag = $tagDao->searchByName($tagNameCut)) {
 			return $tag->id();
