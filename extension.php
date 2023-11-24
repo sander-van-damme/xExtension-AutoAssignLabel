@@ -60,8 +60,9 @@ class AutoAssignLabelExtension extends Minz_Extension
 	private function getTagId($tagName)
 	{
 		$tagDao = FreshRSS_Factory::createTagDao();
+		$tagNameCut = mb_strcut(trim($tagName), 0, FreshRSS_DatabaseDAO::LENGTH_INDEX_UNICODE, 'UTF-8');
 		// If tag exists.
-		if ($tag = $tagDao->searchByName(mb_strcut(trim($tagName), 0, FreshRSS_DatabaseDAO::LENGTH_INDEX_UNICODE, 'UTF-8'))) {
+		if ($tag = $tagDao->searchByName($tagNameCut)) {
 			return $tag->id();
 		}
 		// If tag does not exist.
