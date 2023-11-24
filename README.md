@@ -1,4 +1,4 @@
-# xExtension-AutoAssignLabel
+# FreshRSS extension: xExtension-AutoAssignLabel
 Automatically assign labels to articles in FreshRSS.
 
 ## Installation
