@@ -61,21 +61,20 @@ class AutoAssignLabelExtension extends Minz_Extension
 	{
 		$tagDao = FreshRSS_Factory::createTagDao();
 
-		// Cut tag name to avoid search errors.
+		// Modify search string for tag name to avoid search errors.
 		// This is due to implicit string modification by FreshRSS when adding tags.
-		$tagName = trim($tagName);
-		$tagName = mb_strcut($tagName, 0, FreshRSS_DatabaseDAO::LENGTH_INDEX_UNICODE, 'UTF-8');
-		$tagName = mb_strcut($tagName, 0, 191, 'UTF-8');
+		$tagNameSearchString = trim($tagName);
+		$tagNameSearchString = mb_strcut($tagNameSearchString, 0, FreshRSS_DatabaseDAO::LENGTH_INDEX_UNICODE, 'UTF-8');
+		$tagNameSearchString = mb_strcut($tagNameSearchString, 0, 191, 'UTF-8');
 		Minz_Log::warning($tagName);
-		
+		Minz_Log::warning($tagNameSearchString);
+
 		// If tag exists.
-		if ($tag = $tagDao->searchByName($tagName)) {
+		if ($tag = $tagDao->searchByName($tagNameSearchString)) {
 			return $tag->id();
 		}
 		// If tag does not exist.
-		else {
-			return $tagDao->addTag(['name' => $tagName]);
-		}
+		return $tagDao->addTag(['name' => $tagName]);
 	}
 
 	private function unassignEntryTags($entryId)
