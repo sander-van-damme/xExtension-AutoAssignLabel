@@ -61,7 +61,7 @@ class AutoAssignLabelExtension extends Minz_Extension
 	{
 		$tagDao = FreshRSS_Factory::createTagDao();
 		// Limit tag name length, due to database constraints.
-		$tagName = mb_strcut($tagName, 0, FreshRSS_DatabaseDAO::LENGTH_INDEX_UNICODE, 'UTF-8');
+		$tagName = trim(mb_strcut($tagName, 0, FreshRSS_DatabaseDAO::LENGTH_INDEX_UNICODE, 'UTF-8'));
 		// If tag exists.
 		if ($tag = $tagDao->searchByName($tagName)) {
 			return $tag->id();
